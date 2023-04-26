@@ -1,7 +1,7 @@
 {
   "name": "sprint_4",
   "version": "1.0.0",
-  "description": "",
+  "description": "A empresa que você trabalha precisa criar um MVP (Minimum Viable Product) de uma API que faz o controle de usuários através de um CRUD. Essa API também precisa ter um controle de acessos, onde alguns recursos podem ser acessados apenas por usuários que fizeram login na aplicação, e outros recursos apenas usuários que fizeram login e tem permissões de administrador podem acessar.",
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test SECRET_KEY=chavesecreta jest --forceExit --runInBand",

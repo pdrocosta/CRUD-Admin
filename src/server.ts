@@ -1,9 +1,16 @@
-import app from './app'
-import { startDatabase } from './database'
+import app from "./app";
+import { startDatabase } from "./database";
 
-const PORT: number = parseInt(process.env.PORT!) || 3000
+const appPort = process.env.APP_PORT || 3000 ;
 
-app.listen(PORT, async () => {
-    await startDatabase()
-    console.log(`App running on port ${PORT}`)
-})
+const server = (port: number) =>
+  app.listen(port, async () => {
+    await startDatabase();
+    console.log(`Server is running on port ${port}.`);
+  });
+
+if (process.env.NODE_ENV === "dev") {
+  server(appPort as number);
+}
+
+export default server;
