@@ -10,7 +10,7 @@ import { responseUpdatedUserSchema } from '../../schemas/users.schemas'
 export const updateUserInfoService = async (
     userData: TUserUpdateRequest,
     id: number
-): Promise<TUserResponse | void> => {
+): Promise<TUserResponse> => {
 
 
     const queryString = format(
