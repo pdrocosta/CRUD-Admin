@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { QueryResult } from 'pg'
+import { QueryConfig, QueryResult } from 'pg'
 import { client } from '../database'
 import { AppError } from '../error'
 
@@ -10,7 +10,6 @@ const ensureEmailNotExistsMiddleware = async (
     next: NextFunction
 ): Promise<Response | void> => {
     const { email } = request.body
-
     const queryString: string = `
             SELECT
                 *
@@ -19,11 +18,19 @@ const ensureEmailNotExistsMiddleware = async (
             WHERE
                 email = $1;
         `
+    const queryConfig: QueryConfig = {
+        text: queryString,
+        values: [email],
+    };
 
-    const queryResult: QueryResult = await client.query(queryString, email)
+    console.log(queryConfig)
+
+    const queryResult: QueryResult = await client.query(queryConfig);
 
     if (queryResult.rowCount !== 0) {
         throw new AppError("E-mail already registered", 409)
+
+
     }
 
     return next()

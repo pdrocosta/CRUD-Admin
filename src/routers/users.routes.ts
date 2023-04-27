@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import ensureBodyIsValidMiddleware from '../middlewares/ensureBodyExists'
-import { requestUpdateUserSchema, requestUserSchema, userSchema } from '../schemas/users.schemas'
-import { createUsersController,  deleteUserController,  listUsersController,  reactivateUserController,  retriveUserController,  updateUserController } from '../controllers/users.controller'
+import { requestUpdateUserSchema, requestUserSchema } from '../schemas/users.schemas'
+import { createUsersController, deleteUserController, listUsersController, reactivateUserController, retriveUserController, updateUserController } from '../controllers/users.controller'
 import ensureEmailNotExistsMiddleware from '../middlewares/ensure EmailExists'
 import checkLoginInfos from '../middlewares/ensureLoginInfos'
 import ensureTokenExistsdMiddleware from '../middlewares/ensureTokenIsValid'
@@ -16,7 +16,7 @@ const userRoutes: Router = Router()
 
 userRoutes.get('', ensureTokenExistsdMiddleware, ensureUserIsAdmin, listUsersController)
 
-userRoutes.get('/profile', ensureTokenExistsdMiddleware, checkAdminOrOwner, retriveUserController)
+userRoutes.get('/:profile', ensureTokenExistsdMiddleware, checkAdminOrOwner, retriveUserController)
 
 userRoutes.post(
   "",
@@ -24,9 +24,6 @@ userRoutes.post(
   ensureEmailNotExistsMiddleware,
   createUsersController
 );
-
-userRoutes.post('/login', ensureBodyIsValidMiddleware(resquestLoginSchema), checkLoginInfos, createSessionService)
-
 
 userRoutes.patch('/:id',
   ensureTokenExistsdMiddleware,
@@ -38,7 +35,7 @@ userRoutes.put('/:id/recover', ensureTokenExistsdMiddleware, ensureUserIsAdmin, 
 
 
 userRoutes.delete('/:id',
-  ensureTokenExistsdMiddleware, ensureIdExists, checkAdminOrOwner, deleteUserController) 
+  ensureTokenExistsdMiddleware, ensureIdExists, checkAdminOrOwner, deleteUserController)
 
 
 export default userRoutes

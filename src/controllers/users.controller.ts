@@ -23,9 +23,9 @@ export const listUsersController = async (req: Request, resp: Response): Promise
 
 
 export const retriveUserController = async (req: Request, resp: Response): Promise<Response> => {
-    const { id } = req.params
+    const { profile } = req.params
 
-    const userInfos: TUserResponse = await listUserInfosService(Number(id))
+    const userInfos: TUserResponse = await listUserInfosService(Number(profile))
 
     return resp.status(200).json(userInfos)
 }
