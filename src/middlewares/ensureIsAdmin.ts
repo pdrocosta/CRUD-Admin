@@ -5,8 +5,6 @@ import { AppError } from "../error";
 const ensureUserIsAdmin = async (request: Request, response: Response, next: NextFunction): Promise<void> => {
     const admin = response.locals.token.admin
 
-    console.log(admin)
-
     if (admin) {
         return next()
     }

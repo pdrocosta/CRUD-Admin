@@ -23,7 +23,6 @@ const ensureEmailNotExistsMiddleware = async (
         values: [email],
     };
 
-    console.log(queryConfig)
 
     const queryResult: QueryResult = await client.query(queryConfig);
 

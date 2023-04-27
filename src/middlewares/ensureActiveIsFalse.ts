@@ -22,7 +22,6 @@ const ensureActiveIsFalse = async (request: Request, response: Response, next: N
 
     const active = userInfos.body.active
 
-    console.log(active)
 
     if (!active) {
         return next()
