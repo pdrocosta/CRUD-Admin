@@ -22,7 +22,6 @@ const ensureEmailNotExistsMiddleware = async (
   `, email);
 
     const queryResult: QueryResult = await client.query(queryString);
-    console.log(queryResult);
 
     if (queryResult.rowCount !== 0) {
         throw new AppError("E-mail already registered", 409);

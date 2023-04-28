@@ -6,3 +6,11 @@ CREATE TABLE IF NOT EXISTS users (
   admin BOOLEAN NOT NULL DEFAULT false,
   active BOOLEAN NOT NULL DEFAULT true
 );
+/* 
+
+
+
+
+
+
+    */

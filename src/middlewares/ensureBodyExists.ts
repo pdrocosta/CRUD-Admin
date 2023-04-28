@@ -1,13 +1,18 @@
 import { NextFunction, Request, Response } from 'express'
 import { ZodTypeAny } from 'zod'
+import { AppError } from '../error';
 
 const ensureBodyIsValidMiddleware =
-    (schema: ZodTypeAny) =>
-        (request: Request, response: Response, next: NextFunction) => {
-            const validatedBody = schema.parse(request.body)
+(schema: ZodTypeAny) => (req: Request, res: Response, next: NextFunction) => {
+    if (Object.keys(req.body).length === 0) {
+      throw new AppError("No data received.", 400);
+    }
 
-            request.body = validatedBody
-            return next()
+    const validatedBody = schema.parse(req.body);
+
+    req.body = validatedBody;
+
+    return next();
         }
 
 export default ensureBodyIsValidMiddleware

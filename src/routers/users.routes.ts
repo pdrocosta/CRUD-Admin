@@ -8,12 +8,13 @@ import { ensureIdExists } from '../middlewares/ensureIdExists'
 import ensureUserIsAdmin from '../middlewares/ensureIsAdmin'
 import ensureActiveIsFalse from '../middlewares/ensureActiveIsFalse'
 import checkAdminOrOwner from '../middlewares/checkAdmOrOwner'
+import checkAdm from '../middlewares/checkAdm'
 
 const userRoutes: Router = Router()
 
 userRoutes.get('', ensureTokenExistsdMiddleware, ensureUserIsAdmin, listUsersController)
 
-userRoutes.get('/profile', ensureTokenExistsdMiddleware,  retriveUserController)
+userRoutes.get('/profile', ensureTokenExistsdMiddleware, retriveUserController)
 
 userRoutes.post(
   "",
@@ -25,15 +26,19 @@ userRoutes.post(
 userRoutes.patch('/:id',
   ensureTokenExistsdMiddleware,
   ensureIdExists,
-  checkAdminOrOwner, ensureBodyIsValidMiddleware(requestUpdateUserSchema), ensureEmailNotExistsMiddleware, updateUserController)
+  ensureBodyIsValidMiddleware(requestUpdateUserSchema),  checkAdminOrOwner,ensureEmailNotExistsMiddleware, updateUserController)
+ //     × PATCH /users/:id - Error: Atualizando usuário admin com token de não admin. (30 ms)
+ // × PATCH /users/:id - Error: Tentando atualizar usuários com keys inválidas. (13 ms)
 
+userRoutes.put('/:id/recover', ensureTokenExistsdMiddleware, ensureUserIsAdmin, ensureIdExists, ensureActiveIsFalse, reactivateUserController) //  PUT /users/:id/recover - Error: Ativando usuário já ativo.
 
-userRoutes.put('/:id/recover', ensureTokenExistsdMiddleware, ensureEmailNotExistsMiddleware, ensureUserIsAdmin, ensureIdExists,  reactivateUserController)
 
 
 userRoutes.delete('/:id',
-  ensureTokenExistsdMiddleware, ensureIdExists, checkAdminOrOwner, deleteUserController)
-
+  ensureTokenExistsdMiddleware, ensureIdExists, checkAdm, deleteUserController)
+/*
+// × // DELETE /users/:id - Error: Deletando usuário admin com token de não admin. (49 ms)
+× // DELETE /users/:id - Sucesso: Deletando usuário não admin com token de não admin. (26 ms) */
 
 export default userRoutes
 

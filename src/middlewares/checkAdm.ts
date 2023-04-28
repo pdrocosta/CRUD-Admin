@@ -4,9 +4,9 @@ import format from "pg-format";
 import { QueryResult } from "pg";
 import { client } from "../database";
 
-async function checkAdminOrOwner(request: Request, response: Response, next: NextFunction) {
+async function checkAdm(request: Request, response: Response, next: NextFunction) {
     const authenticatedUserId = response.locals.token.id;
-
+    console.log("checkAdm", authenticatedUserId)
     const queryString: string = format(
         `
         SELECT *
@@ -15,13 +15,13 @@ async function checkAdminOrOwner(request: Request, response: Response, next: Nex
       `,
       Number(authenticatedUserId)
     );
+    console.log(queryString)
 
     const queryResult: QueryResult = await client.query(queryString);
     const userInfos = (queryResult.rows[0]);
-    const id = userInfos.id
+    console.log(userInfos)
 
-
-    if (userInfos.admin === false && userInfos.id !== authenticatedUserId) {
+    if (userInfos.admin === false) {
         throw new AppError("Insufficient Permission", 403);
     }
 
@@ -29,4 +29,4 @@ async function checkAdminOrOwner(request: Request, response: Response, next: Nex
 }
 
 
-export default checkAdminOrOwner;
+export default checkAdm;

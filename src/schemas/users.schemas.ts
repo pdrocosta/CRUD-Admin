@@ -23,9 +23,9 @@ const requestCreateUserSchema = userSchema
 const responseCreatedUserSchema = userSchema
   .omit({ password: true });
 
-const requestUpdateUserSchema = userSchema
-  .partial()
+const requestUpdateUserSchema = userSchema.partial()
   .omit({ id: true, admin: true, active: true });
+  
 
 export const responseUpdatedUserSchema = userSchema
   .omit({ password: true });

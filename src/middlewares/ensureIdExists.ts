@@ -17,8 +17,7 @@ export const ensureIdExists = async (
           FROM users
           WHERE id = (%L);
         `,
-    id
-  );
+   Number(id) );
 
 
   const queryResult: QueryResult = await client.query(queryString);

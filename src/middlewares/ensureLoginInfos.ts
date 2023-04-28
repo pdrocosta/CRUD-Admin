@@ -28,12 +28,11 @@ const checkLoginInfos = async (
 
   const userInfos = (queryResult.rows[0]);
 
-
-  if (queryResult.rowCount === 0) {
-    throw new AppError("Wrong email or password!", 401);
+  if (!userInfos) {
+    throw new AppError("Wrong email/password", 401);
   }
 
-  if (userInfos.active === false) {
+  if (!userInfos.active) {
     throw new AppError('Your account is not active', 401);
   }
 
@@ -48,17 +47,17 @@ const checkLoginInfos = async (
 
   const token: string = jwt.sign(
     {
-      password: payload.password,
+      email: userInfos.email,
     },
     String(process.env.SECRET_KEY!),
     {
-      expiresIn: '24h',
+      expiresIn: process.env.EXPIRES_IN,
       subject: userInfos.id.toString(),
     }
   );
   response.locals.token = {
     token: token,
-    admin: payload.admin,
+    admin: userInfos.admin,
     id: userInfos.id,
   };
 
