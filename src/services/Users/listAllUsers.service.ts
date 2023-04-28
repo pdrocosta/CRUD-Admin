@@ -1,10 +1,10 @@
 import { QueryResult } from "pg";
 import "dotenv/config";
-import { TUserResponse } from "../../interfaces/users.interfaces";
 import { client } from "../../database";
+import { TAllUserResponse } from "../../interfaces/users.interfaces";
 import { responseAllUsersSchema } from "../../schemas/users.schemas";
 
-const listUsersService = async (): Promise<Array<TUserResponse>> => {
+const listUsersService = async (): Promise<TAllUserResponse> => {
 
   const queryString: string = `
         SELECT
@@ -13,10 +13,11 @@ const listUsersService = async (): Promise<Array<TUserResponse>> => {
             users;
     `;
 
-  const queryResult: QueryResult<TUserResponse> = await client.query(
+  const queryResult: QueryResult<TAllUserResponse> = await client.query(
     queryString
   );
-  const allUsers : TUserResponse[] = responseAllUsersSchema.parse(queryResult.rows[0])
+  const allUsers: TAllUserResponse = responseAllUsersSchema.parse(queryResult.rows)
+
 
   return allUsers
 };

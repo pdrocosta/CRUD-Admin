@@ -8,7 +8,8 @@ const ensureTokenExistsdMiddleware = async (
   next: NextFunction
 ): Promise<Response | void> => {
   let token = request.headers.authorization;
-
+  console.log("ensuretoken")
+  const userInfos = request.body
   if (!token) {
     throw new AppError("Missing Bearer Token", 401);
   }
@@ -25,7 +26,6 @@ const ensureTokenExistsdMiddleware = async (
 
     };
   });
-
   return next();
 };
 

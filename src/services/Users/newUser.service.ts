@@ -21,15 +21,14 @@ const createUserService = async (
                 RETURNING
                     *;
             `,
-    ...Object.keys(userInfos),
-    ...Object.values(userInfos)
+    Object.keys(userInfos),
+    Object.values(userInfos)
   );
-
 
   const queryResult: QueryResult<TUserResponse> = await client.query(queryString);
 
   const newUser = responseUserSchema.parse(queryResult.rows[0]);
-
+  
   return newUser;
 };
 

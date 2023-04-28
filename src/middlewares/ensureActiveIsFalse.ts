@@ -6,24 +6,25 @@ import { QueryResult } from "pg";
 import { client } from "../database";
 
 const ensureActiveIsFalse = async (request: Request, response: Response, next: NextFunction): Promise<void> => {
-    const { id } = request.params
+  const email = request.body.email
     const queryString = format(
       `
             SELECT *
             FROM users
-            WHERE id = $1;
+            WHERE email = (%L);
           `,
-      id
+          email
     );
   
   
     const queryResult: QueryResult = await client.query(queryString);
     const userInfos = queryResult.rows[0]
+    console.log(email, queryString, userInfos)
 
-    const active = userInfos.body.active
+    const active = userInfos.active
+    console.log(active, email, queryString, userInfos)
 
-
-    if (!active) {
+    if (active === false) {
         return next()
     }
 

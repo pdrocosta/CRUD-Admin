@@ -9,12 +9,14 @@ export const ensureIdExists = async (
   response: Response,
   next: NextFunction
 ): Promise<void | Response> => {
+  console.log("ensureid")
+
   const { id } = request.params
   const queryString = format(
     `
           SELECT *
           FROM users
-          WHERE id = $1;
+          WHERE id = (%L);
         `,
     id
   );

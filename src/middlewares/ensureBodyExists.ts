@@ -7,7 +7,7 @@ const ensureBodyIsValidMiddleware =
             const validatedBody = schema.parse(request.body)
 
             request.body = validatedBody
-
+            console.log("ensurebody")
             return next()
         }
 

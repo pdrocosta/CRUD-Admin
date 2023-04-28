@@ -11,11 +11,10 @@ export const deleteUserService = async (id: number): Promise<TUserResponse> => {
     SET
         active= false
     WHERE   
-        id=$1
+        id=(%L)
     RETURNING *;
   `;
     const queryResult: QueryResult = await client.query(queryString, [id]);
     const deletedUser = responseUserSchema.parse(queryResult.rows[0])
     return deletedUser
 };
-

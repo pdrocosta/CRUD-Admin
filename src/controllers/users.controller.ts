@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { TUser, TUserRequest, TUserResponse, TUserUpdateRequest } from '../interfaces/users.interfaces'
+import { TAllUserResponse, TUser, TUserRequest, TUserResponse, TUserUpdateRequest } from '../interfaces/users.interfaces'
 import createUserService from '../services/Users/newUser.service'
 import listAllUsersService from '../services/Users/listAllUsers.service'
 import { updateUserInfoService } from '../services/Users/patchUserAdmin.service'
@@ -16,16 +16,15 @@ export const createUsersController = async (req: Request, resp: Response): Promi
 }
 
 export const listUsersController = async (req: Request, resp: Response): Promise<Response> => {
-    const allUsers: Array<TUserResponse> = await listAllUsersService()
+    const allUsers: TAllUserResponse = await listAllUsersService()
 
     return resp.status(200).json(allUsers)
 }
 
 
-export const retriveUserController = async (req: Request, resp: Response): Promise<Response> => {
-    const { profile } = req.params
-
-    const userInfos: TUserResponse = await listUserInfosService(Number(profile))
+export const retriveUserController = async (req: Request, resp : Response): Promise<Response> => {
+    const id = resp.locals.token.id
+    const userInfos: TUserResponse = await listUserInfosService(Number(id))
 
     return resp.status(200).json(userInfos)
 }

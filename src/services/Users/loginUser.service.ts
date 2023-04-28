@@ -16,30 +16,20 @@ const createSessionService = async (
   const query: string = `
     SELECT * FROM users WHERE email = %L;
   `;
+console.log("creation")
+
   const queryFormat: string = format(query, [payload.email]);
+
   const queryResult: QueryResult<TUser> = await client.query(queryFormat);
   const user = userSchema.parse(queryResult.rows[0])
 
-  if (queryResult.rowCount === 0) {
-    throw new AppError("Wrong email or password!", 401);
-  }
-
-  const comparePassword: boolean = await bcrypt.compare(
-    payload.password,
-    user.password
-  );
-
-  if (comparePassword === false) {
-    throw new AppError("Wrong email or password!", 401);
-  }
-
   const token: string = jwt.sign(
     {
-      password: payload.password
+      email: user.email,
     },
-    String(process.env.SECRET_KEY!),
+    (process.env.SECRET_KEY!),
     {
-      expiresIn: "24h",
+      expiresIn: process.env.EXPIRES_IN,
       subject: user.id.toString(),
     }
   );

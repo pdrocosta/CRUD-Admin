@@ -1,38 +1,35 @@
-import { NextFunction, Request, Response } from 'express'
-import { QueryConfig, QueryResult } from 'pg'
-import { client } from '../database'
-import { AppError } from '../error'
-
+import { NextFunction, Request, Response } from 'express';
+import { QueryResult } from 'pg';
+import { client } from '../database';
+import { AppError } from '../error';
+import format from 'pg-format';
 
 const ensureEmailNotExistsMiddleware = async (
     request: Request,
     response: Response,
     next: NextFunction
 ): Promise<Response | void> => {
-    const { email } = request.body
-    const queryString: string = `
-            SELECT
-                *
-            FROM
-                users
-            WHERE
-                email = $1;
-        `
-    const queryConfig: QueryConfig = {
-        text: queryString,
-        values: [email],
-    };
+    const { email } = request.body;
+    console.log("ensureemail")
 
-
-    const queryResult: QueryResult = await client.query(queryConfig);
-
-    if (queryResult.rowCount !== 0) {
-        throw new AppError("E-mail already registered", 409)
-
-
+    if (request.method === "PATCH " && !request.body.email) {
+        return next()
     }
 
-    return next()
-}
+    const queryString: string = format(`
+    SELECT *
+    FROM users
+    WHERE email = (%L);
+  `, email);
 
-export default ensureEmailNotExistsMiddleware
+    const queryResult: QueryResult = await client.query(queryString);
+    console.log(queryResult);
+
+    if (queryResult.rowCount !== 0) {
+        throw new AppError("E-mail already registered", 409);
+    }
+
+    return next();
+};
+
+export default ensureEmailNotExistsMiddleware;

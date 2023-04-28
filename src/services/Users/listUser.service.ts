@@ -3,19 +3,23 @@ import "dotenv/config";
 import { TUserResponse } from "../../interfaces/users.interfaces";
 import { client } from "../../database";
 import { responseUserSchema } from "../../schemas/users.schemas";
+import format from "pg-format";
 
 const listUserInfosService = async (id: Number): Promise<TUserResponse> => {
-
-    const queryString: string = `
+    const userId = Number(id)
+    const queryString: string = format(
+        `
         SELECT
           *
         FROM
-            users;
-            WHERE id=$1
-    `;
+            users
+            WHERE id= %L;
+    `, [userId]
+    );
+
 
     const queryResult: QueryResult<TUserResponse> = await client.query(
-        queryString, [id]
+        queryString
     );
     const userInfos: TUserResponse = responseUserSchema.parse(queryResult.rows[0])
 

@@ -1,37 +1,41 @@
-import { NextFunction, Request, Response } from 'express'
-import { QueryResult } from 'pg'
-import { client } from '../database'
-import { AppError } from '../error'
-import * as bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import format from "pg-format";
+
+import { NextFunction, Request, Response } from 'express';
+import { QueryResult } from 'pg';
+import { client } from '../database';
+import { AppError } from '../error';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { userSchema } from "../schemas/users.schemas";
+
 const checkLoginInfos = async (
   request: Request,
   response: Response,
   next: NextFunction
 ): Promise<Response | void> => {
-  const payload = request.body
+  const payload = request.body;
+  console.log("checkLoginInfos")
 
-  const queryString: string = `
-            SELECT
-                *
-            FROM
-                users
-            WHERE
-                email = $1;
-        `
+  const queryString: string = format(
+    `
+      SELECT *
+      FROM users
+      WHERE email =  (%L);
+    `,
+    payload.email
+  );
+
+  const queryResult: QueryResult = await client.query(queryString);
+
+  const userInfos = (queryResult.rows[0]);
 
 
-  const queryResult: QueryResult = await client.query(queryString, [payload.email])
-
-  const userInfos = queryResult.rows[0]
-
-  if (queryResult.rowCount !== 0) {
-    throw new AppError("Wrong email/password", 401)
+  if (queryResult.rowCount === 0) {
+    throw new AppError("Wrong email or password!", 401);
   }
 
   if (userInfos.active === false) {
-    throw new AppError("Wrong email/password", 401)
-
+    throw new AppError('Your account is not active', 401);
   }
 
   const comparePassword: boolean = await bcrypt.compare(
@@ -40,28 +44,26 @@ const checkLoginInfos = async (
   );
 
   if (comparePassword === false) {
-    throw new AppError("Wrong email or password!", 401);
+    throw new AppError('Wrong email/password', 401);
   }
-
 
   const token: string = jwt.sign(
     {
-      password: payload.password
+      password: payload.password,
     },
     String(process.env.SECRET_KEY!),
     {
-      expiresIn: "24h",
+      expiresIn: '24h',
       subject: userInfos.id.toString(),
     }
   );
-
   response.locals.token = {
     token: token,
-    admin: userInfos.admin,
-    id: userInfos.id
+    admin: payload.admin,
+    id: userInfos.id,
   };
 
-  return next()
-}
+  return next();
+};
 
-export default checkLoginInfos
+export default checkLoginInfos;
