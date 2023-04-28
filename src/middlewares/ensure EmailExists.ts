@@ -10,7 +10,6 @@ const ensureEmailNotExistsMiddleware = async (
     next: NextFunction
 ): Promise<Response | void> => {
     const { email } = request.body;
-    console.log("ensureemail")
 
     if (request.method === "PATCH " && !request.body.email) {
         return next()

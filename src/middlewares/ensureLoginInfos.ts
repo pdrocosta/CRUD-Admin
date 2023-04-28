@@ -14,7 +14,6 @@ const checkLoginInfos = async (
   next: NextFunction
 ): Promise<Response | void> => {
   const payload = request.body;
-  console.log("checkLoginInfos")
 
   const queryString: string = format(
     `

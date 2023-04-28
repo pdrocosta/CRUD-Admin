@@ -12,7 +12,6 @@ export const updateUserInfoService = async (
     id: number
 ): Promise<TUserResponse> => {
 
-    console.log(userData, id)
     const queryString = format(
         `
             UPDATE users
@@ -27,15 +26,12 @@ export const updateUserInfoService = async (
         [id]
     )
 
-        console.log(queryString)
 
     const queryResult: QueryResult<TUserResponse> = await client.query(
         queryString
     )
-    console.log(queryResult)
 
     const updatedUser = responseUpdatedUserSchema.parse(queryResult.rows[0])
-    console.log(updatedUser)
 
     return updatedUser
 }

@@ -20,10 +20,8 @@ export const reactivateUserService = async (id: number): Promise<TUserResponse> 
     )
 
     const queryResult: QueryResult = await client.query(queryString);
-    console.log(queryResult)
 
     const reactivatedUser = responseUserSchema.parse(queryResult.rows[0])
-    console.log(reactivatedUser)
 
     if (queryResult.rowCount === 0) {
         throw new AppError("User already active", 400);

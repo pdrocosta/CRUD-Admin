@@ -16,7 +16,6 @@ const createSessionService = async (
   const query: string = `
     SELECT * FROM users WHERE email = %L;
   `;
-console.log("creation")
 
   const queryFormat: string = format(query, [payload.email]);
 

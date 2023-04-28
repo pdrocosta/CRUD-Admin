@@ -9,7 +9,6 @@ export const ensureIdExists = async (
   response: Response,
   next: NextFunction
 ): Promise<void | Response> => {
-  console.log("ensureid")
 
   const { id } = request.params
   const queryString = format(

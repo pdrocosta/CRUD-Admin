@@ -6,7 +6,6 @@ async function checkAdminOrOwner(request: Request, response: Response, next: Nex
     const id = request.params.id
     const authenticatedUserId = response.locals.token.id;
 
-    console.log(isAdmin, id, authenticatedUserId)
 
     if (isAdmin === false && id !== authenticatedUserId) {
         throw new AppError("Insufficient Permission", 403);
