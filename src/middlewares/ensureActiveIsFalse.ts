@@ -20,7 +20,6 @@ const ensureActiveIsFalse = async (request: Request, response: Response, next: N
   
     const queryResult: QueryResult = await client.query(queryString);
     const userInfos = queryResult.rows[0]
-      console.log(userInfos, queryResult, id)
     const active = userInfos.active
 
     if (active === false) {

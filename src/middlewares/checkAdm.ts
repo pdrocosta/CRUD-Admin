@@ -6,7 +6,6 @@ import { client } from "../database";
 
 async function checkAdm(request: Request, response: Response, next: NextFunction) {
     const authenticatedUserId = response.locals.token.id;
-    console.log("checkAdm", authenticatedUserId)
     const queryString: string = format(
         `
         SELECT *
@@ -15,7 +14,6 @@ async function checkAdm(request: Request, response: Response, next: NextFunction
       `,
       Number(authenticatedUserId)
     );
-    console.log(queryString)
 
     const queryResult: QueryResult = await client.query(queryString);
     const userInfos = (queryResult.rows[0]);

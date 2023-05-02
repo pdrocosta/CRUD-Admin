@@ -23,7 +23,7 @@ const handleErrors = (
     }
 
     if (err instanceof ZodError) {
-        return res.json(err.flatten().fieldErrors)
+        return res.status(400).json(err.flatten().fieldErrors)
     }
 
 
